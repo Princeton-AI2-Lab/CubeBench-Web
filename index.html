@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description"
+    content="CubeBench: Diagnosing Interactive, Long-Horizon Spatial Reasoning under Partial Observations. A novel benchmark centered on the Rubik's Cube to evaluate LLM agents' spatial reasoning, long-horizon state tracking, and exploration under partial observation." />
+  
+  <meta name="keywords"
+    content="CubeBench, Rubik's Cube, Spatial Reasoning, LLM Agents, Benchmark, Long-Horizon Planning, Partial Observation, AI Agents" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>
+    CubeBench | Project Page
+  </title>
+  <link rel="icon" type="image/x-icon" href="static/images/cube_with_hat.jpg" />
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+
+  <link rel="stylesheet" href="static/css/bulma.min.css" />
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css" />
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+  <link rel="stylesheet" href="static/css/index.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h2 class="title is-2 publication-title">
+              CubeBench: Diagnosing Interactive, Long-Horizon Spatial Reasoning under Partial Observations
+            </h2>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://c7w.tech/about/" target="_blank">Huan-ang Gao</a><sup>*1</sup>,</span>
+              <span class="author-block">
+                Zikang Zhang<sup>*1</sup>,</span>
+              <span class="author-block">
+                Tianwei Luo<sup>1</sup>,</span>
+              <span class="author-block">
+                Kaisen Yang<sup>1</sup>,</span>
+              <span class="author-block">
+                Xinzhe Juan<sup>3</sup>,</span>
+              <span class="author-block">
+                Jiahao Qiu<sup>2</sup>,</span><br />
+              <span class="author-block">
+                Tianxing Chen<sup>4</sup>,</span>
+              <span class="author-block">
+                Bingxiang He<sup>1</sup>,</span>
+              <span class="author-block">
+                Hao Zhao<sup>1</sup>,</span>
+              <span class="author-block">
+                Hao Zhou<sup>1</sup>,</span>
+              <span class="author-block">
+                Shilong Liu<sup>†2</sup>,</span>
+              <span class="author-block">
+                Mengdi Wang<sup>†2</sup>
+              </span>
+            </div>
+            <div style="margin: 0.5em;"></div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block is-size-6">
+                <sup>1</sup> Tsinghua University &nbsp;&nbsp;&nbsp;
+                <sup>2</sup> Princeton University &nbsp;&nbsp;&nbsp;
+                <sup>3</sup> SJTU & UMich &nbsp;&nbsp;&nbsp;
+                <sup>4</sup> HKU
+                <div style="margin: 0.1em;"></div>
+                <span class="eql-cntrb"><small><br /><sup>*</sup>Indicates Equal Contribution</small></span>
+                <span style="margin: 1em;"></span>
+                <span class="eql-cntrb"><small><sup>†</sup>Indicates Corresponding Author</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Arxiv PDF link -->
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+
+                <!-- Github link -->
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <!-- ArXiv abstract Link -->
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Teaser image-->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div class="columns is-centered">
+          <img src="static/images/1_cube_trim_hd.png" width="100%" />
+        </div>
+        <h2 class="has-text-centered is-size-6">
+          <b>Overview of CubeBench Performance.</b> An overview of the performance of leading LLMs on the CubeBench benchmark, 
+          broken down by its three diagnostic tiers. <b>Tier 1 (Full Symbolic State)</b> tests foundational state tracking 
+          using complete symbolic information, where the best average pass rate is only 37.5%. <b>Tier 2 (Full Visual State)</b> 
+          challenges visual and spatial reasoning by requiring agents to interpret a 2D unfolded map, and <b>Tier 3 (Partial Visual State)</b> 
+          evaluates active exploration from partial views. Across all tiers, GPT-5 emerges as the top-performing model, though the 
+          results highlight a significant performance gap between symbolic and visual reasoning tasks.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End teaser image -->
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Large Language Model (LLM) agents, while proficient in the digital realm, face a significant gap in 
+              physical-world deployment due to the challenge of forming and maintaining a robust spatial mental model. 
+              We identify three core cognitive challenges hindering this transition: <b>spatial reasoning</b>, 
+              <b>long-horizon state tracking via mental simulation</b>, and <b>active exploration under partial observation</b>. 
+              To isolate and evaluate these faculties, we introduce <b>CubeBench</b>, a novel generative benchmark centered 
+              on the Rubik's Cube. CubeBench uses a three-tiered diagnostic framework that progressively assesses agent 
+              capabilities, from foundational state tracking with full symbolic information to active exploration with only 
+              partial visual data. Our experiments on leading LLMs reveal critical limitations, including a uniform <b>0.00% 
+              pass rate on all long-horizon tasks</b>, exposing a fundamental failure in long-term planning. We also propose 
+              a diagnostic framework to isolate these cognitive bottlenecks by providing external solver tools. By analyzing 
+              the failure modes, we provide key insights to guide the development of more physically-grounded intelligent agents.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
+  <!-- Three Core Challenges -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3">Three Core Cognitive Challenges</h2>
+        <div class="columns is-centered">
+          <img src="static/images/2_cube_trim_hd.png" width="65%" />
+        </div>
+        <h2 class="has-text-centered is-size-6">
+          <b>Visualization of the three core cognitive challenges required for spatial reasoning.</b> 
+          We identify three critical challenges: (1) <b>Spatial Reasoning</b> - understanding 3D geometry and action consequences, 
+          (2) <b>Long-Horizon State Tracking</b> - maintaining and updating the world model over long sequences, 
+          (3) <b>Exploration under Partial Observation</b> - constructing a complete mental model from limited views.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- Method -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3">The CubeBench Framework</h2>
+        
+        <h3 class="title is-4" style="margin-top: 2em;">Three-Tiered Diagnostic Framework</h3>
+        <div class="columns is-centered">
+          <img src="static/images/3_cube_trim_hd.png" width="75%" />
+        </div>
+        <h2 class="has-text-centered is-size-6">
+          <b>Illustration of the three-tiered task structure.</b> <b>Tier 1 (Full Symbolic State)</b> provides complete 
+          state information as a string, making it a fully observable MDP. <b>Tier 2 (Full Visual State)</b> presents 
+          the full state as a 2D unfolded map, challenging visual thinking. <b>Tier 3 (Partial Visual State)</b> provides 
+          only a partial view (Face view or Vertex view), requiring active exploration.
+        </h2>
+
+        <br />
+
+        <h3 class="title is-4" style="margin-top: 2em;">Interaction Protocol</h3>
+        <div class="columns is-centered">
+          <img src="static/images/5_cube_trim_hd.png" width="55%" />
+        </div>
+        <h2 class="has-text-centered is-size-6">
+          <b>Agent interaction follows the ReAct paradigm.</b> Each step consists of a Thought-Code-Observation cycle, 
+          with a maximum of 20 steps and 30-minute timeout per run.
+        </h2>
+
+        <br />
+
+        <h3 class="title is-4" style="margin-top: 2em;">Diagnostic Evaluation Framework</h3>
+        <div class="columns is-centered">
+          <img src="static/images/4_cube_trim_hd.png" width="75%" />
+        </div>
+        <h2 class="has-text-centered is-size-6">
+          <b>Three-part diagnostic framework for systematically evaluating LLM agents.</b> To answer Q1, we test a basic 
+          agent with only fundamental interaction tools. For Q2, we augment the agent with various dense reward signals. 
+          Finally, for Q3, we deploy agents with different levels of tool support to diagnose whether failures originate 
+          from high-level planning, state reconstruction, or procedural data transformation.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End Method -->
+
+  <!-- Results -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3">Key Results</h2>
+        
+        <div class="content has-text-justified">
+          <h3 class="title is-4">Experiment 1: Basic Agent Performance</h3>
+          <p>
+            We evaluated leading LLMs across all four observation modalities on both short- and long-horizon tasks. 
+            The results reveal several critical limitations:
+          </p>
+          <ul>
+            <li><b>Universal failure on long-horizon tasks:</b> All models exhibit a 0.00% pass rate on long-horizon tasks 
+            across all input modalities, exposing a fundamental deficit in long-horizon state tracking.</li>
+            <li><b>Sharp decline from symbolic to visual inputs:</b> Non-zero pass rates are achieved almost exclusively 
+            with symbolic string input; performance on visual inputs is near or at zero for most models.</li>
+            <li><b>GPT-5 leads, but struggles:</b> GPT-5 achieves a 0.75 pass rate on symbolic short-horizon tasks, 
+            significantly exceeding all other models, yet still fails on all long-horizon challenges.</li>
+          </ul>
+
+          <div style="overflow-x: auto; margin-top: 2em;">
+            <table class="table is-bordered is-striped is-narrow is-hoverable" style="margin: 0 auto; font-size: 0.75em;">
+              <caption style="caption-side: top; text-align: center; font-weight: bold; margin-bottom: 1em;">
+                Baseline Performance: Pass Rates and Number of make_move Calls Across Modalities
+              </caption>
+              <thead>
+                <tr>
+                  <th rowspan="2">Model</th>
+                  <th colspan="2">Full Symbolic</th>
+                  <th colspan="2">Full Visual</th>
+                  <th colspan="2">Face View</th>
+                  <th colspan="2">Vertex View</th>
+                </tr>
+                <tr>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background-color: #ffd6e0;">
+                  <td><strong>GPT-5</strong></td>
+                  <td><strong>0.75</strong></td>
+                  <td>0.00</td>
+                  <td><strong>0.20</strong></td>
+                  <td>0.00</td>
+                  <td><strong>0.40</strong></td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #d8b4ff;">
+                  <td>MLP (Policy Gradient)</td>
+                  <td><strong>0.75</strong></td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>gpt-oss-120b</td>
+                  <td>0.20</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>Grok-4</td>
+                  <td>0.20</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>Kimi K2 (2024-09-05)</td>
+                  <td>0.15</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>Gemini 2.5 Pro</td>
+                  <td>0.10</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>DeepSeek-R1 (2025-05-28)</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>Claude Sonnet 4</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>Qwen3-Max</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>DeepSeek-V3.1</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>doubao-seed-1-6-vision</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>InternVL-3 (78B)</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>Qwen2.5-VL-72B-Instruct</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>kimi-vl-a3b-thinking</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #ffd6e0;">
+                  <td>GPT-4o</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.10</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>GLM-4.5V</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>Gemma-3-27B-IT</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #bfd7ff;">
+                  <td>Seed-OSS-36B-Instruct</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="has-text-centered is-size-7" style="margin-top: 0.5em;">
+              <span style="background-color: #ffd6e0; padding: 2px 6px;">Pink</span> = Proprietary models &nbsp;
+              <span style="background-color: #bfd7ff; padding: 2px 6px;">Blue</span> = Open-source models &nbsp;
+              <span style="background-color: #d8b4ff; padding: 2px 6px;">Purple</span> = Traditional RL baseline &nbsp;
+              S = Short-horizon (depth 1-4), L = Long-horizon (depth 8-20). "--" = Model does not support visual inputs.<br>
+              <strong>Critical Finding:</strong> All models show 0.00 pass rate on all long-horizon tasks.
+            </p>
+          </div>
+
+
+          <h3 class="title is-4" style="margin-top: 2em;">Experiment 2: Impact of Dense Rewards</h3>
+          <p>
+            We tested whether dense reward signals (face, sticker, and heuristic) can guide agent search:
+          </p>
+          <ul>
+            <li><b>Short-horizon improvement:</b> Dense rewards generally increase pass rates on short-horizon tasks, 
+            acting as local guides.</li>
+            <li><b>Long-horizon failure persists:</b> Pass rates on all long-horizon tasks remain at 0.00%, regardless 
+            of reward type, indicating that local feedback cannot compensate for fundamental planning deficits.</li>
+            <li><b>Model-dependent effectiveness:</b> More capable agents like GPT-5 sometimes perform worse with 
+            external rewards, suggesting conflict with internal strategies.</li>
+          </ul>
+
+          <div style="overflow-x: auto; margin-top: 2em;">
+            <table class="table is-bordered is-striped is-narrow is-hoverable" style="margin: 0 auto; font-size: 0.85em;">
+              <caption style="caption-side: top; text-align: center; font-weight: bold; margin-bottom: 1em;">
+                Effect of Dense Rewards on Pass Rates (Short-Horizon Tasks Only)
+              </caption>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Reward Type</th>
+                  <th>Full Symbolic</th>
+                  <th>Full Visual</th>
+                  <th>Face View</th>
+                  <th>Vertex View</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="4" style="vertical-align: middle;"><strong>GPT-5</strong></td>
+                  <td>no reward</td>
+                  <td>0.75</td>
+                  <td>0.20</td>
+                  <td>0.40</td>
+                  <td>0.05</td>
+                </tr>
+                <tr>
+                  <td>face</td>
+                  <td><strong>0.85</strong></td>
+                  <td><strong>0.55</strong></td>
+                  <td>0.50</td>
+                  <td><strong>0.40</strong></td>
+                </tr>
+                <tr>
+                  <td>sticker</td>
+                  <td>0.65</td>
+                  <td><strong>0.55</strong></td>
+                  <td><strong>0.55</strong></td>
+                  <td><strong>0.50</strong></td>
+                </tr>
+                <tr>
+                  <td>heuristic</td>
+                  <td>0.50</td>
+                  <td>0.45</td>
+                  <td><strong>0.65</strong></td>
+                  <td>0.30</td>
+                </tr>
+                <tr>
+                  <td rowspan="4" style="vertical-align: middle;"><strong>Gemini 2.5 Pro</strong></td>
+                  <td>no reward</td>
+                  <td>0.10</td>
+                  <td>0.05</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>face</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>sticker</td>
+                  <td>0.10</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>heuristic</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.10</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td rowspan="4" style="vertical-align: middle;"><strong>Claude Sonnet 4</strong></td>
+                  <td>no reward</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>face</td>
+                  <td>0.10</td>
+                  <td>0.10</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>sticker</td>
+                  <td><strong>0.25</strong></td>
+                  <td>0.15</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                </tr>
+                <tr>
+                  <td>heuristic</td>
+                  <td><strong>0.20</strong></td>
+                  <td>0.05</td>
+                  <td>0.05</td>
+                  <td>0.10</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="has-text-centered is-size-7" style="margin-top: 0.5em;">
+              Note: All long-horizon tasks remain at 0.00 pass rate regardless of reward type.
+            </p>
+          </div>
+
+          <h3 class="title is-4" style="margin-top: 2em;">Experiment 3: Diagnostic with Solver Tools</h3>
+          <p>
+            By equipping agents with optimal solvers, we isolated specific cognitive bottlenecks:
+          </p>
+          <ul>
+            <li><b>Planning as primary bottleneck:</b> Standard-Solver agents show marked improvement, confirming that 
+            long-horizon planning can be successfully offloaded to external tools.</li>
+            <li><b>Spatial reasoning matters:</b> The performance gap between Standard-Solver and Ideal-Solver agents 
+            reveals that spatial transformation for tool use is non-trivial.</li>
+            <li><b>Partial observation is fundamental:</b> Universal failure on Vertex view tasks, even with ideal 
+            solvers, isolates exploration under partial observation as the ultimate bottleneck.</li>
+            <li><b>Emergent tool learning:</b> Agents exhibit remarkable autonomous tool-learning through trial-and-error, 
+            suggesting that discovery-oriented environments may be more effective than explicit instruction.</li>
+          </ul>
+
+          <div style="overflow-x: auto; margin-top: 2em;">
+            <table class="table is-bordered is-striped is-narrow is-hoverable" style="margin: 0 auto; font-size: 0.80em;">
+              <caption style="caption-side: top; text-align: center; font-weight: bold; margin-bottom: 1em;">
+                Comparison of Agent Configurations: Basic vs Standard-Solver vs Ideal-Solver
+              </caption>
+              <thead>
+                <tr>
+                  <th rowspan="2">Model</th>
+                  <th rowspan="2">Agent Type</th>
+                  <th colspan="2">Full Symbolic</th>
+                  <th colspan="2">Full Visual</th>
+                  <th colspan="2">Face View</th>
+                  <th colspan="2">Vertex View</th>
+                </tr>
+                <tr>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                  <th>S</th>
+                  <th>L</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="3" style="vertical-align: middle;"><strong>GPT-5</strong></td>
+                  <td>Basic</td>
+                  <td>0.75</td>
+                  <td>0.00</td>
+                  <td>0.20</td>
+                  <td>0.00</td>
+                  <td>0.40</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #e6f3ff;">
+                  <td>Standard-Solver</td>
+                  <td>0.95</td>
+                  <td><strong>0.95</strong></td>
+                  <td>0.65</td>
+                  <td><strong>0.70</strong></td>
+                  <td><strong>1.00</strong></td>
+                  <td><strong>0.95</strong></td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #ccecff;">
+                  <td>Ideal-Solver</td>
+                  <td><strong>1.00</strong></td>
+                  <td><strong>1.00</strong></td>
+                  <td><strong>0.95</strong></td>
+                  <td><strong>0.80</strong></td>
+                  <td>0.85</td>
+                  <td><strong>1.00</strong></td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td rowspan="3" style="vertical-align: middle;"><strong>Gemini 2.5 Pro</strong></td>
+                  <td>Basic</td>
+                  <td>0.10</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #e6f3ff;">
+                  <td>Standard-Solver</td>
+                  <td>0.70</td>
+                  <td>0.65</td>
+                  <td>0.25</td>
+                  <td>0.00</td>
+                  <td>0.20</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #ccecff;">
+                  <td>Ideal-Solver</td>
+                  <td><strong>1.00</strong></td>
+                  <td><strong>1.00</strong></td>
+                  <td>0.25</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td rowspan="3" style="vertical-align: middle;"><strong>Claude Sonnet 4</strong></td>
+                  <td>Basic</td>
+                  <td>0.05</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #e6f3ff;">
+                  <td>Standard-Solver</td>
+                  <td>0.35</td>
+                  <td>0.85</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr style="background-color: #ccecff;">
+                  <td>Ideal-Solver</td>
+                  <td><strong>1.00</strong></td>
+                  <td><strong>1.00</strong></td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="has-text-centered is-size-7" style="margin-top: 0.5em;">
+              S = Short-horizon tasks (depth 1-4), L = Long-horizon tasks (depth 8-20). 
+              <span style="background-color: #e6f3ff; padding: 2px 6px;">Light Blue</span> = Standard-Solver,
+              <span style="background-color: #ccecff; padding: 2px 6px;">Darker Blue</span> = Ideal-Solver.
+              Note the universal failure on Vertex View even with Ideal-Solver.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Results -->
+
+  <!--BibTex citation -->
+  <section class="section is-light" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      If you find our work useful in your research, please consider citing:
+      <div style="margin: 0.5em;"></div>
+      <pre><code>@article{gao2025cubebench,
+  title={CubeBench: Diagnosing Interactive, Long-Horizon Spatial Reasoning under Partial Observations},
+  author={Gao, Huan-ang and Zhang, Zikang and Luo, Tianwei and Yang, Kaisen and Juan, Xinzhe and Qiu, Jiahao and Chen, Tianxing and He, Bingxiang and Zhao, Hao and Zhou, Hao and Liu, Shilong and Wang, Mengdi},
+  journal={arXiv preprint},
+  year={2025}
+}</code></pre>
+    </div>
+  </section>
+  <!--End BibTex citation -->
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project
+                Page Template</a>
+              which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              You are free to borrow the source of this website, we just ask that you link back to this page in the footer. <br />
+              This website is licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons
+                Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
+
